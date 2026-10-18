@@ -60,8 +60,48 @@ class PortfolioFlowTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
+    public function test_guests_must_sign_in_before_creating_or_managing_portfolios(): void
+    {
+        $portfolio = Portfolio::create([
+            'uuid' => 'ba6ad5aa-48a2-45f9-9cf0-d650bd593777',
+            'management_token' => str_repeat('m', 64),
+            'full_name' => 'Morgan Chen',
+            'email' => 'morgan@example.com',
+        ]);
+
+        $this->get(route('portfolios.create'))->assertRedirect(route('login'));
+        $this->post(route('portfolios.store'), [])->assertRedirect(route('login'));
+        $this->get(route('portfolios.templates', $portfolio->management_token))->assertRedirect(route('login'));
+        $this->patch(route('portfolios.template', $portfolio->management_token), ['template' => 'modern'])->assertRedirect(route('login'));
+        $this->get(route('portfolios.manage', $portfolio->management_token))->assertRedirect(route('login'));
+        $this->get(route('portfolios.edit', $portfolio->management_token))->assertRedirect(route('login'));
+        $this->put(route('portfolios.update', $portfolio->management_token), [])->assertRedirect(route('login'));
+        $this->delete(route('portfolios.destroy', $portfolio->management_token))->assertRedirect(route('login'));
+
+        $this->get(route('portfolios.show', $portfolio))->assertOk()->assertSee('Morgan Chen');
+        $this->assertDatabaseCount('portfolios', 1);
+    }
+
+    public function test_new_users_return_to_portfolio_creation_after_registering(): void
+    {
+        $this->get(route('portfolios.create'))->assertRedirect(route('login'));
+        $this->get(route('register'))->assertOk();
+
+        $this->post(route('register.store'), [
+            'name' => 'Morgan Chen',
+            'email' => 'morgan@example.com',
+            'password' => 'secure-password',
+            'password_confirmation' => 'secure-password',
+        ])->assertRedirect(route('portfolios.create'));
+
+        $this->assertAuthenticated();
+        $this->get(route('portfolios.create'))->assertOk();
+    }
+
     public function test_a_portfolio_can_be_created_styled_viewed_edited_and_deleted(): void
     {
+        $this->actingAs(User::factory()->create());
+
         $response = $this->post(route('portfolios.store'), [
             'full_name' => 'Morgan Chen',
             'profile_image_url' => 'https://images.example.com/morgan.jpg',
@@ -144,6 +184,8 @@ class PortfolioFlowTest extends TestCase
 
     public function test_only_the_three_supported_templates_can_be_selected(): void
     {
+        $this->actingAs(User::factory()->create());
+
         $portfolio = Portfolio::create([
             'uuid' => '92d0d5aa-48a2-45f9-9cf0-d650bd593777',
             'management_token' => str_repeat('x', 64),
@@ -160,6 +202,8 @@ class PortfolioFlowTest extends TestCase
 
     public function test_profile_and_external_links_reject_non_http_schemes(): void
     {
+        $this->actingAs(User::factory()->create());
+
         $this->from(route('portfolios.create'))
             ->post(route('portfolios.store'), [
                 'full_name' => 'Casey Park',

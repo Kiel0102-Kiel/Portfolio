@@ -9,7 +9,7 @@
             <h1>A portfolio that<br><em>sounds like you.</em></h1>
             <p class="hero-description">Bring your experience, projects, and point of view together. Choose a design, make it yours, and share one clear link.</p>
             <a class="button button-dark" href="{{ route('portfolios.create') }}">Build your portfolio <span aria-hidden="true">↗</span></a>
-            <p class="hero-note">Free to create <span>·</span> No account needed</p>
+            <p class="hero-note">Free to create <span>·</span> Sign in required</p>
         </div>
         <div class="hero-art" aria-label="Portfolio preview example">
             <div class="art-label">A LITTLE ABOUT ME <span>01 / 03</span></div>

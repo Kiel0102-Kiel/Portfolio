@@ -18,12 +18,12 @@
             <a href="{{ route('home') }}#how-it-works">How it works</a>
             @auth
                 <a class="nav-account" href="{{ route('account.index') }}">My portfolios</a>
+                <a class="nav-cta portfolio-cta" href="{{ route('portfolios.create') }}">Create a portfolio <span aria-hidden="true">↗</span></a>
                 <form class="nav-logout" method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Sign out</button></form>
             @else
                 <a class="nav-account" href="{{ route('login') }}">Sign in</a>
                 <a class="nav-cta nav-register" href="{{ route('register') }}">Create account</a>
             @endauth
-            <a class="nav-cta portfolio-cta" href="{{ route('portfolios.create') }}">Create a portfolio <span aria-hidden="true">↗</span></a>
         </nav>
     </header>
     @if (session('status'))

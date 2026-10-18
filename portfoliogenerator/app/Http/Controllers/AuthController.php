@@ -33,7 +33,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('account.index');
+        return redirect()->intended(route('account.index'));
     }
 
     public function login(Request $request): RedirectResponse

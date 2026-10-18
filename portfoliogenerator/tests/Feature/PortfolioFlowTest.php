@@ -10,6 +10,15 @@ class PortfolioFlowTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_https_proxy_headers_are_used_for_asset_urls(): void
+    {
+        $this->withServerVariables(['HTTP_X_FORWARDED_PROTO' => 'https'])
+            ->get(route('home'))
+            ->assertOk()
+            ->assertSee('https://localhost/css/portfolio.css', false)
+            ->assertSee('https://localhost/js/portfolio.js', false);
+    }
+
     public function test_a_portfolio_can_be_created_styled_viewed_edited_and_deleted(): void
     {
         $response = $this->post(route('portfolios.store'), [

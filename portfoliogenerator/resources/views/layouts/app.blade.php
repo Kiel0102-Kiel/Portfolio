@@ -16,7 +16,14 @@
         <a class="wordmark" href="{{ route('home') }}"><span class="wordmark-mark">f.</span> folioform</a>
         <nav class="site-nav" aria-label="Main navigation">
             <a href="{{ route('home') }}#how-it-works">How it works</a>
-            <a class="nav-cta" href="{{ route('portfolios.create') }}">Create a portfolio <span aria-hidden="true">↗</span></a>
+            @auth
+                <a class="nav-account" href="{{ route('account.index') }}">My portfolios</a>
+                <form class="nav-logout" method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Sign out</button></form>
+            @else
+                <a class="nav-account" href="{{ route('login') }}">Sign in</a>
+                <a class="nav-cta nav-register" href="{{ route('register') }}">Create account</a>
+            @endauth
+            <a class="nav-cta portfolio-cta" href="{{ route('portfolios.create') }}">Create a portfolio <span aria-hidden="true">↗</span></a>
         </nav>
     </header>
     @if (session('status'))

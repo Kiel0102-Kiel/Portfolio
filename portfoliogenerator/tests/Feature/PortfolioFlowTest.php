@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Portfolio;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,6 +18,46 @@ class PortfolioFlowTest extends TestCase
             ->assertOk()
             ->assertSee('https://localhost/css/portfolio.css', false)
             ->assertSee('https://localhost/js/portfolio.js', false);
+    }
+
+    public function test_visitors_can_create_accounts_sign_in_and_manage_their_portfolios(): void
+    {
+        $this->get(route('register'))
+            ->assertOk()
+            ->assertSee('Create account');
+
+        $this->post(route('register.store'), [
+            'name' => 'Morgan Chen',
+            'email' => 'MORGAN@example.com',
+            'password' => 'secure-password',
+            'password_confirmation' => 'secure-password',
+        ])->assertRedirect(route('account.index'));
+
+        $user = User::where('email', 'morgan@example.com')->firstOrFail();
+        $this->assertAuthenticatedAs($user);
+        $this->assertNotSame('secure-password', $user->password);
+
+        $response = $this->post(route('portfolios.store'), [
+            'full_name' => 'Morgan Chen',
+            'email' => 'morgan@example.com',
+        ]);
+        $portfolio = $user->portfolios()->firstOrFail();
+
+        $response->assertRedirect(route('portfolios.templates', $portfolio->management_token));
+        $this->get(route('account.index'))
+            ->assertOk()
+            ->assertSee('Morgan Chen')
+            ->assertSee(route('portfolios.manage', $portfolio->management_token), false);
+
+        $this->post(route('logout'))->assertRedirect(route('home'));
+        $this->assertGuest();
+
+        $this->post(route('login.store'), [
+            'email' => 'morgan@example.com',
+            'password' => 'secure-password',
+        ])->assertRedirect(route('account.index'));
+
+        $this->assertAuthenticatedAs($user);
     }
 
     public function test_a_portfolio_can_be_created_styled_viewed_edited_and_deleted(): void

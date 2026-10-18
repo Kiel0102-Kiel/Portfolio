@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class Portfolio extends Model
@@ -10,6 +11,7 @@ class Portfolio extends Model
     protected $fillable = [
         'uuid',
         'management_token',
+        'user_id',
         'full_name',
         'profile_image',
         'email',
@@ -38,6 +40,11 @@ class Portfolio extends Model
     public function getRouteKeyName(): string
     {
         return 'uuid';
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function isRemoteProfileImage(): bool

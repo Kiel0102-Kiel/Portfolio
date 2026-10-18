@@ -26,9 +26,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .site-header { background: var(--paper); border-bottom: 1px solid rgba(25,43,36,.08); }
 .wordmark { display: inline-flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 700; letter-spacing: .02em; }
 .wordmark-mark { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 50%; color: var(--paper); background: var(--forest); font-family: var(--font-display); font-size: 20px; }
-.site-nav { display: flex; align-items: center; gap: 33px; font-size: 12px; font-weight: 600; }
+.site-nav { display: flex; align-items: center; gap: 24px; font-size: 12px; font-weight: 600; }
 .site-nav a:first-child { color: var(--muted); }
 .nav-cta { padding: 10px 15px; border: 1px solid var(--line); border-radius: 3px; }
+.nav-account, .nav-logout button { color: var(--muted); }
+.nav-logout { margin: 0; }
+.nav-logout button { padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
 .nav-cta span { margin-left: 12px; color: var(--coral); }
 .site-footer { margin-top: 100px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
 .site-footer .wordmark { color: var(--ink); }
@@ -102,6 +105,24 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .portfolio-form { min-width: 0; }
 .form-errors { margin-bottom: 24px; padding: 15px 18px; border: 1px solid #e8b9aa; background: #fff7f3; color: #833b2b; font-size: 12px; }
 .form-errors ul { margin: 8px 0 0; padding-left: 20px; }
+.auth-shell { display: grid; max-width: 940px; min-height: 470px; grid-template-columns: 1fr 1fr; align-items: center; gap: 9vw; margin: 0 auto; padding: 65px 32px; }
+.auth-copy h1, .account-heading h1 { margin: 17px 0; font-family: var(--font-display); font-size: 48px; font-weight: 400; line-height: 1.05; }
+.auth-copy .muted-copy { max-width: 330px; }
+.auth-form { display: grid; gap: 18px; padding: 30px; border: 1px solid var(--line); background: #ffffff80; }
+.auth-form .button { width: 100%; }
+.auth-switch { margin: 0; color: var(--muted); font-size: 12px; text-align: center; }
+.auth-switch a { color: var(--forest); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.remember-row { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 12px; }
+.remember-row input { accent-color: var(--forest); }
+.account-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin: 40px 0; }
+.account-heading h1 { margin-bottom: 0; }
+.account-list { border-top: 1px solid var(--line); }
+.account-item { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 23px 0; border-bottom: 1px solid var(--line); }
+.account-item h2, .account-empty h2 { margin: 0 0 5px; font-family: var(--font-display); font-size: 23px; font-weight: 400; }
+.account-item p { margin: 0; color: var(--muted); font-size: 12px; }
+.account-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+.account-empty { padding: 28px 0; border-top: 1px solid var(--line); }
+.account-empty .text-link { display: inline-block; margin-top: 10px; color: var(--ink); }
 .form-section { padding: 26px 0 31px; border-top: 1px solid var(--line); }
 .form-section-heading { display: flex; gap: 15px; margin-bottom: 20px; }
 .section-index { color: var(--coral); font-size: 10px; font-weight: 700; }
@@ -314,8 +335,14 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
     .site-header, .site-footer { padding: 15px 20px; }
     .site-nav { gap: 12px; }
     .site-nav > a:first-child { display: none; }
+    .site-nav .portfolio-cta { display: none; }
     .nav-cta { padding: 8px 10px; font-size: 10px; }
     .site-footer { margin-top: 64px; }
+    .auth-shell { grid-template-columns: 1fr; gap: 24px; padding: 38px 20px 50px; }
+    .auth-copy h1, .account-heading h1 { font-size: 39px; }
+    .auth-form { padding: 22px; }
+    .account-heading { align-items: start; flex-direction: column; margin: 24px 0; }
+    .account-item { align-items: start; flex-direction: column; gap: 16px; }
     .home-hero { grid-template-columns: 1fr; gap: 34px; padding: 43px 22px 50px; }
     .hero-copy h1 { font-size: 55px; }
     .hero-art { min-height: 370px; }

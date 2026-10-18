@@ -28,6 +28,7 @@ class PortfolioController extends Controller
         $data = $this->validatedPortfolio($request);
         $data['uuid'] = (string) Str::uuid();
         $data['management_token'] = Str::random(64);
+        $data['user_id'] = $request->user()?->id;
 
         $portfolio = Portfolio::create($data);
 

@@ -28,12 +28,13 @@ class PortfolioFlowTest extends TestCase
     {
         $this->get(route('register'))
             ->assertOk()
-            ->assertSee('Create account');
+            ->assertSee('Create account')
+            ->assertDontSee('auth-back');
 
         $this->get(route('login'))
             ->assertOk()
             ->assertSee('Welcome!')
-            ->assertSee('auth-back')
+            ->assertDontSee('auth-back')
             ->assertDontSee('class="nav-account" href="'.route('login').'"', false)
             ->assertDontSee('nav-register')
             ->assertSee('Create an account')

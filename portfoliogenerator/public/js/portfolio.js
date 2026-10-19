@@ -33,6 +33,15 @@ document.querySelectorAll('form[data-confirm]').forEach((form) => {
     });
 });
 
+document.querySelectorAll('[data-history-back]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+        if (window.history.length > 1) {
+            event.preventDefault();
+            window.history.back();
+        }
+    });
+});
+
 const templateName = document.querySelector('#selected-template-name');
 document.querySelectorAll('input[name="template"]').forEach((input) => {
     input.addEventListener('change', () => {

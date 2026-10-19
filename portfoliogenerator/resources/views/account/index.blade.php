@@ -4,6 +4,7 @@
 
 @section('content')
     <section class="page-shell account-shell">
+        <a class="back-link" href="{{ route('home') }}">← <span>Home</span></a>
         <div class="account-heading">
             <div>
                 <p class="eyebrow">YOUR FOLIOFORM</p>

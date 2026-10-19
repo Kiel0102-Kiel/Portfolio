@@ -9,7 +9,7 @@
 @section('title', $portfolio->full_name . ' · Portfolio')
 
 @section('content')
-    <div class="preview-toolbar"><a class="back-link" href="{{ route('home') }}">← <span>Folioform</span></a><span class="eyebrow">PUBLIC PORTFOLIO</span><a class="button button-outline button-small" href="{{ route('portfolios.create') }}">Create your own <span aria-hidden="true">↗</span></a></div>
+    <div class="preview-toolbar"><a class="back-link" href="{{ route('home') }}" data-history-back>← <span>Back</span></a><span class="eyebrow">PORTFOLIO PREVIEW</span>@if (auth()->check() && (int) auth()->id() === (int) $portfolio->user_id)<a class="button button-dark button-small" href="{{ route('account.index') }}">Create portfolio</a>@else<span class="preview-toolbar-brand">Folioform</span>@endif</div>
 
     @if ($portfolio->template === 'modern')
         <article class="public-portfolio modern-portfolio">

@@ -15,14 +15,18 @@
     <header class="site-header">
         <a class="wordmark" href="{{ route('home') }}"><span class="wordmark-mark">f.</span> folioform</a>
         <nav class="site-nav" aria-label="Main navigation">
-            <a href="{{ route('home') }}#how-it-works">How it works</a>
             @auth
-                <a class="nav-account" href="{{ route('account.index') }}">My portfolios</a>
-                <a class="nav-cta portfolio-cta" href="{{ route('portfolios.create') }}">Create a portfolio <span aria-hidden="true">↗</span></a>
-                <form class="nav-logout" method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Sign out</button></form>
-            @else
-                <a class="nav-account" href="{{ route('login') }}">Sign in</a>
-                <a class="nav-cta nav-register" href="{{ route('register') }}">Create account</a>
+                <a class="nav-account {{ request()->routeIs('account.index') ? 'is-active' : '' }}" href="{{ route('account.index') }}" @if (request()->routeIs('account.index')) aria-current="page" @endif>My portfolios</a>
+                <a class="nav-cta portfolio-cta {{ request()->routeIs('portfolios.create', 'portfolios.templates') ? 'is-active' : '' }}" href="{{ route('portfolios.create') }}" @if (request()->routeIs('portfolios.create', 'portfolios.templates')) aria-current="page" @endif>Create a portfolio <span aria-hidden="true">↗</span></a>
+                <details class="settings-menu">
+                    <summary class="{{ request()->routeIs('account.profile*') || request()->routeIs('account.settings') || request()->routeIs('account.password.*') ? 'is-active' : '' }}">Settings <span aria-hidden="true">⌄</span></summary>
+                    <div class="settings-menu-items">
+                        <a class="{{ request()->routeIs('account.profile*') ? 'is-active' : '' }}" href="{{ route('account.profile') }}" @if (request()->routeIs('account.profile*')) aria-current="page" @endif>Profile</a>
+                        <a class="{{ request()->routeIs('account.settings') || request()->routeIs('account.password.*') ? 'is-active' : '' }}" href="{{ route('account.settings') }}" @if (request()->routeIs('account.settings') || request()->routeIs('account.password.*')) aria-current="page" @endif>Account settings</a>
+                        <a href="{{ route('home') }}#how-it-works">How it works</a>
+                        <form class="nav-logout" method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Sign out</button></form>
+                    </div>
+                </details>
             @endauth
         </nav>
     </header>

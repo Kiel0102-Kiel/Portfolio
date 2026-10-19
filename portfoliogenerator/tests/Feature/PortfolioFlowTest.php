@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Portfolio;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
 use Tests\TestCase;
 
 class PortfolioFlowTest extends TestCase
@@ -13,6 +15,8 @@ class PortfolioFlowTest extends TestCase
 
     public function test_https_proxy_headers_are_used_for_asset_urls(): void
     {
+        $this->actingAs(User::factory()->create());
+
         $this->withServerVariables(['HTTP_X_FORWARDED_PROTO' => 'https'])
             ->get(route('home'))
             ->assertOk()
@@ -25,6 +29,15 @@ class PortfolioFlowTest extends TestCase
         $this->get(route('register'))
             ->assertOk()
             ->assertSee('Create account');
+
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertSee('Welcome!')
+            ->assertSee('auth-back')
+            ->assertDontSee('class="nav-account" href="'.route('login').'"', false)
+            ->assertDontSee('nav-register')
+            ->assertSee('Create an account')
+            ->assertDontSee('footer-back');
 
         $this->post(route('register.store'), [
             'name' => 'Morgan Chen',
@@ -47,17 +60,56 @@ class PortfolioFlowTest extends TestCase
         $this->get(route('account.index'))
             ->assertOk()
             ->assertSee('Morgan Chen')
+            ->assertSee('class="back-link" href="'.route('home').'"', false)
+            ->assertSee('Profile')
+            ->assertSee('Account settings')
+            ->assertSee('How it works')
+            ->assertSee('Sign out')
             ->assertSee(route('portfolios.manage', $portfolio->management_token), false);
 
-        $this->post(route('logout'))->assertRedirect(route('home'));
+        $this->get(route('account.profile'))->assertOk()->assertSee('Your profile.');
+        $this->get(route('account.settings'))->assertOk()->assertSee('Account settings.');
+        $this->put(route('account.profile.update'), [
+            'name' => 'Morgan C. Chen',
+            'email' => 'morgan@example.com',
+        ])->assertRedirect(route('account.profile'));
+        $this->assertDatabaseHas('users', ['id' => $user->id, 'name' => 'Morgan C. Chen']);
+        $this->put(route('account.password.update'), [
+            'current_password' => 'secure-password',
+            'password' => 'another-secure-password',
+            'password_confirmation' => 'another-secure-password',
+        ])->assertRedirect(route('account.settings'));
+        $this->assertTrue(password_verify('another-secure-password', $user->fresh()->password));
+
+        $this->post(route('logout'))->assertRedirect(route('login'));
         $this->assertGuest();
 
         $this->post(route('login.store'), [
             'email' => 'morgan@example.com',
-            'password' => 'secure-password',
+            'password' => 'another-secure-password',
         ])->assertRedirect(route('account.index'));
 
         $this->assertAuthenticatedAs($user);
+    }
+
+    public function test_visitors_are_sent_to_sign_in_before_the_home_page(): void
+    {
+        $this->get(route('home'))->assertRedirect(route('login'));
+
+        $this->actingAs(User::factory()->create())
+            ->get(route('home'))
+            ->assertOk()
+            ->assertDontSee('footer-back');
+    }
+
+    public function test_expired_logout_requests_redirect_to_sign_in(): void
+    {
+        $request = Request::create('/sign-out', 'POST');
+        $response = app(\Illuminate\Contracts\Debug\ExceptionHandler::class)
+            ->render($request, new TokenMismatchException);
+
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame(route('login'), $response->headers->get('Location'));
     }
 
     public function test_guests_must_sign_in_before_creating_or_managing_portfolios(): void
@@ -78,7 +130,10 @@ class PortfolioFlowTest extends TestCase
         $this->put(route('portfolios.update', $portfolio->management_token), [])->assertRedirect(route('login'));
         $this->delete(route('portfolios.destroy', $portfolio->management_token))->assertRedirect(route('login'));
 
-        $this->get(route('portfolios.show', $portfolio))->assertOk()->assertSee('Morgan Chen');
+        $this->get(route('portfolios.show', $portfolio))
+            ->assertOk()
+            ->assertSee('Morgan Chen')
+            ->assertDontSee('Create portfolio');
         $this->assertDatabaseCount('portfolios', 1);
     }
 
@@ -95,7 +150,11 @@ class PortfolioFlowTest extends TestCase
         ])->assertRedirect(route('portfolios.create'));
 
         $this->assertAuthenticated();
-        $this->get(route('portfolios.create'))->assertOk();
+        $this->get(route('portfolios.create'))
+            ->assertOk()
+            ->assertSee('portfolio-cta is-active', false)
+            ->assertSee('aria-current="page"', false)
+            ->assertDontSee('footer-back');
     }
 
     public function test_a_portfolio_can_be_created_styled_viewed_edited_and_deleted(): void
@@ -145,12 +204,16 @@ class PortfolioFlowTest extends TestCase
 
         $this->get(route('portfolios.templates', $portfolio->management_token))
             ->assertOk()
+            ->assertSee('portfolio-cta is-active', false)
+            ->assertSee('Back to manage')
+            ->assertSee(route('portfolios.manage', $portfolio->management_token), false)
             ->assertSee('Simple')
             ->assertSee('Modern')
-            ->assertSee('Creative');
+            ->assertSee('Creative')
+            ->assertSee('Preview portfolio');
 
         $this->patch(route('portfolios.template', $portfolio->management_token), ['template' => 'creative'])
-            ->assertRedirect(route('portfolios.manage', $portfolio->management_token));
+            ->assertRedirect(route('portfolios.show', $portfolio));
 
         $this->get(route('portfolios.show', $portfolio))
             ->assertOk()
@@ -158,11 +221,18 @@ class PortfolioFlowTest extends TestCase
             ->assertSee('Field Notes')
             ->assertSee('Communication design')
             ->assertSee('Morgan Chen')
+            ->assertSee('PORTFOLIO PREVIEW')
+            ->assertSee('Create portfolio')
+            ->assertDontSee('Create your own')
             ->assertDontSee($portfolio->management_token)
             ->assertDontSee('Edit details');
 
         $this->get(route('portfolios.manage', $portfolio->uuid))->assertNotFound();
-        $this->get(route('portfolios.manage', $portfolio->management_token))->assertOk()->assertSee('Delete portfolio');
+        $this->get(route('portfolios.manage', $portfolio->management_token))
+            ->assertOk()
+            ->assertSee('class="back-link" href="'.route('account.index').'"', false)
+            ->assertSee('My portfolios')
+            ->assertSee('Delete portfolio');
         $this->get(route('portfolios.edit', $portfolio->management_token))->assertOk()->assertSee('Morgan Chen');
 
         $this->put(route('portfolios.update', $portfolio->management_token), [

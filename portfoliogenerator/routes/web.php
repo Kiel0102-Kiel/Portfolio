@@ -4,7 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PortfolioController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [PortfolioController::class, 'index'])->name('home');
+Route::get('/', [PortfolioController::class, 'index'])->middleware('auth')->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('/sign-in', [AuthController::class, 'showLogin'])->name('login');
@@ -15,6 +15,10 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/account', [AuthController::class, 'account'])->name('account.index');
+    Route::get('/account/profile', [AuthController::class, 'profile'])->name('account.profile');
+    Route::put('/account/profile', [AuthController::class, 'updateProfile'])->name('account.profile.update');
+    Route::get('/account/settings', [AuthController::class, 'settings'])->name('account.settings');
+    Route::put('/account/settings/password', [AuthController::class, 'updatePassword'])->name('account.password.update');
     Route::post('/sign-out', [AuthController::class, 'logout'])->name('logout');
 
     Route::get('/portfolios/create', [PortfolioController::class, 'create'])->name('portfolios.create');

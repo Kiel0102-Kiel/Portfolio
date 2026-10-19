@@ -51,7 +51,7 @@ class PortfolioController extends Controller
 
         $portfolio->update($data);
 
-        return redirect()->route('portfolios.manage', $portfolio->management_token);
+        return redirect()->route('portfolios.show', $portfolio);
     }
 
     public function show(Portfolio $portfolio): View

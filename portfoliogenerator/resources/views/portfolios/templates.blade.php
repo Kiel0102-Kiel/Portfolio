@@ -4,7 +4,7 @@
 
 @section('content')
     <section class="template-page page-shell">
-        <a class="back-link" href="{{ route('portfolios.edit', $portfolio->management_token) }}">← <span>Edit your details</span></a>
+        <a class="back-link" href="{{ route('portfolios.manage', $portfolio->management_token) }}">← <span>Back to manage</span></a>
         <div class="page-heading"><p class="eyebrow">STEP 02 / THE FEEL</p><h1>Choose your<br><em>point of view.</em></h1><p class="muted-copy">Three distinct ways to tell the same story. You can switch designs later.</p></div>
         <div class="private-manage-note"><span>PRIVATE MANAGEMENT LINK</span><a href="{{ route('portfolios.manage', $portfolio->management_token) }}">Keep this link private so only you can edit your portfolio ↗</a></div>
         <form method="POST" action="{{ route('portfolios.template', $portfolio->management_token) }}">
@@ -24,7 +24,7 @@
                 </label>
             </div>
             @error('template') <p class="input-error">{{ $message }}</p> @enderror
-            <div class="template-submit"><p class="muted-copy">Selected: <strong id="selected-template-name">{{ ucfirst($portfolio->template) }}</strong></p><button class="button button-dark" type="submit">Preview my portfolio <span aria-hidden="true">↗</span></button></div>
+            <div class="template-submit"><p class="muted-copy">Selected: <strong id="selected-template-name">{{ ucfirst($portfolio->template) }}</strong></p><button class="button button-dark" type="submit">Preview portfolio <span aria-hidden="true">↗</span></button></div>
         </form>
     </section>
 @endsection

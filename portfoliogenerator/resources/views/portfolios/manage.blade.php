@@ -4,7 +4,7 @@
 
 @section('content')
     <section class="manage-page page-shell">
-        <a class="back-link" href="{{ route('portfolios.show', $portfolio) }}">← <span>View public portfolio</span></a>
+        <a class="back-link" href="{{ route('account.index') }}">← <span>My portfolios</span></a>
         <div class="page-heading"><p class="eyebrow">YOUR SPACE / MANAGE</p><h1>Keep it<br><em>up to date.</em></h1><p class="muted-copy">Your public portfolio and private management link are listed below. Anyone with the private link can edit or delete this portfolio.</p></div>
         <div class="manage-card">
             <div class="manage-card-top"><div class="manage-avatar">{{ mb_substr($portfolio->full_name, 0, 1) }}</div><div><span class="eyebrow">PORTFOLIO OWNER</span><h2>{{ $portfolio->full_name }}</h2><p>{{ $portfolio->email }}</p></div><span class="template-pill">{{ ucfirst($portfolio->template) }} template</span></div>

@@ -5,8 +5,9 @@
 @section('content')
     <section class="auth-shell">
         <div class="auth-copy">
+            <a class="back-link auth-back" href="{{ route($mode === 'register' ? 'login' : 'register') }}" data-history-back>← <span>Back</span></a>
             <p class="eyebrow">FOLIOFORM ACCOUNT</p>
-            <h1>{{ $mode === 'register' ? 'Your work, all together.' : 'Welcome back.' }}</h1>
+            <h1>{{ $mode === 'register' ? 'Your work, all together.' : 'Welcome!' }}</h1>
             <p class="muted-copy">{{ $mode === 'register' ? 'Create an account to keep your portfolios together.' : 'Sign in to find and manage your portfolios.' }}</p>
         </div>
 

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -59,7 +60,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('login');
     }
 
     public function account(Request $request): View
@@ -67,5 +68,40 @@ class AuthController extends Controller
         return view('account.index', [
             'portfolios' => $request->user()->portfolios()->latest()->get(),
         ]);
+    }
+
+    public function profile(): View
+    {
+        return view('account.profile');
+    }
+
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $request->merge(['email' => mb_strtolower(trim($request->input('email', '')))]);
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($request->user()->id)],
+        ]);
+
+        $request->user()->update($data);
+
+        return redirect()->route('account.profile')->with('status', 'Your profile has been updated.');
+    }
+
+    public function settings(): View
+    {
+        return view('account.settings');
+    }
+
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $request->user()->update(['password' => $data['password']]);
+
+        return redirect()->route('account.settings')->with('status', 'Your password has been updated.');
     }
 }

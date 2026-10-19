@@ -56,21 +56,13 @@ Open `http://127.0.0.1:8000`. The included stylesheet and JavaScript are served 
 
 ## Online Database and Deployment
 
-The repository is prepared for Neon PostgreSQL and Railway hosting. The actual Neon database and Railway deployment must be created under the project owner's accounts; credentials and a live URL are deliberately not committed.
-
-1. Create a PostgreSQL project in Neon and copy its pooled or direct connection URL with SSL enabled.
-2. Create a Railway project from this source repository and deploy using the included `railway.json` configuration.
-3. In Railway's service variables, set `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL` to the assigned HTTPS domain, and `APP_KEY` to a newly generated production key.
-4. Set `DB_CONNECTION=pgsql` and `DB_URL` to the Neon connection URL. Keep the URL private; never add it to source control.
-5. Generate a Railway public domain. The start script runs migrations and serves Laravel on Railway's assigned port. Verify the `/up` health check and create a test portfolio.
-
-Generate a production key locally with `php artisan key:generate --show`, then enter the output directly in Railway's private variable settings. Do not paste it into project documentation or commit it. The production process runs `php artisan migrate --force` on startup.
+The application is deployed from the `main` branch to Railway. Railway PostgreSQL is attached to the app service, and Railway's private variables hold production configuration and credentials. Pushes to `main` trigger automatic deployments. The included start script runs migrations and serves Laravel on Railway's assigned port.
 
 Uploaded profile images use Laravel's public local disk. On hosts with ephemeral disks, use the profile image URL field or configure persistent object storage before relying on uploaded files.
 
-- **Database platform:** Neon PostgreSQL, pending project owner provisioning.
-- **Hosting platform:** Railway, pending project owner deployment.
-- **Published URL:** Pending Railway domain creation.
+- **Database platform:** Railway PostgreSQL.
+- **Hosting platform:** Railway, auto-deployed from `main`.
+- **Published URL:** [https://portfolio-production-5550.up.railway.app](https://portfolio-production-5550.up.railway.app).
 
 ## Screenshots
 

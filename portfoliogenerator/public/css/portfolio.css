@@ -458,3 +458,103 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+:root {
+    --ink: #182622;
+    --forest: #20594e;
+    --paper: #f4f6f2;
+    --white: #fff;
+    --line: #d7dfd9;
+    --muted: #64736c;
+    --coral: #e87558;
+    --lime: #d8ef80;
+    --mint: #cce5d5;
+    --font-body: 'Manrope', sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
+}
+
+body {
+    background-color: var(--paper);
+    background-image: linear-gradient(#214b4010 1px, transparent 1px), linear-gradient(90deg, #214b4010 1px, transparent 1px);
+    background-size: 48px 48px;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline-color: var(--coral); }
+.site-header { position: sticky; z-index: 30; top: 0; border-bottom-color: #1826221a; background: #f4f6f2ed; backdrop-filter: blur(14px); }
+.wordmark { font-family: var(--font-display); font-size: 16px; }
+.wordmark-mark { border-radius: 7px; color: var(--ink); background: var(--lime); font-family: var(--font-display); font-weight: 700; }
+.site-nav { gap: 22px; font-size: 12px; }
+.site-nav a.is-active::after { bottom: -9px; height: 2px; background: var(--coral); }
+.portfolio-cta.is-active::after { bottom: -7px; }
+.settings-menu > summary { font-weight: 600; }
+.settings-menu-items { top: calc(100% + 12px); border-radius: 6px; box-shadow: 0 16px 40px #18262218; }
+.settings-menu-items a, .settings-menu-items button { border-radius: 3px; }
+.site-footer { color: var(--muted); }
+.button { min-height: 48px; border-radius: 5px; font-weight: 700; transition: transform .18s ease, background .18s ease, box-shadow .18s ease; }
+.button-dark { color: var(--ink); background: var(--lime); }
+.button-dark:hover { background: #c8e568; box-shadow: 0 6px 18px #89a94730; }
+.button-outline { border-color: #aebbb3; background: #ffffff80; }
+.button-outline:hover { background: var(--white); }
+.back-link { font-weight: 600; }
+
+.home-hero { max-width: 1480px; min-height: 610px; gap: 6vw; padding-top: 64px; padding-bottom: 72px; }
+.hero-copy { max-width: 590px; }
+.hero-copy h1, .page-heading h1, .editor-intro h1 { font-family: var(--font-display); font-weight: 600; line-height: 1.02; }
+.hero-copy h1 { margin: 22px 0; font-size: 66px; }
+.hero-copy h1 em, .page-heading h1 em { color: var(--forest); font-weight: 600; }
+.hero-description { max-width: 450px; font-size: 15px; }
+.hero-art { min-height: 440px; border-radius: 7px; background: #1e4c40; }
+.art-portrait { color: var(--ink); background: var(--mint); }
+.art-sticker { transform: rotate(-7deg); border-radius: 6px; }
+.steps-section { border-top: 1px solid #d7dfd9; border-bottom: 1px solid #d7dfd9; background: #e9eee9; }
+.section-heading h2, .template-strip h2 { font-family: var(--font-display); font-weight: 600; }
+.step-item { grid-template-columns: 45px 1fr 24px; padding-top: 22px; padding-bottom: 22px; }
+.step-item h3 { font-family: var(--font-display); font-size: 16px; }
+.template-strip { background: #1c3932; }
+.template-strip h2 em { color: var(--lime); }
+.page-shell { max-width: 1200px; }
+.page-heading h1, .editor-intro h1 { font-size: 54px; }
+.editor-shell { max-width: 1200px; gap: 7vw; }
+.progress-track { height: 4px; border-radius: 4px; background: #dbe3dc; }
+.progress-track span { border-radius: inherit; background: var(--coral); }
+.auth-shell { max-width: 1020px; min-height: 520px; gap: 7vw; }
+.auth-copy h1, .account-heading h1 { font-family: var(--font-display); font-size: 46px; font-weight: 600; line-height: 1.05; }
+.auth-form { gap: 19px; padding: 32px; border: 1px solid #dbe2dc; border-radius: 7px; background: #fff; box-shadow: 0 18px 46px #203b3010; }
+.signin-help { max-width: 410px; margin-top: 25px; }
+.signin-help summary { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 1px solid var(--line); color: var(--forest); font-size: 12px; font-weight: 700; cursor: pointer; list-style: none; }
+.signin-help summary::-webkit-details-marker { display: none; }
+.signin-help summary::after { color: var(--coral); content: '+'; font-size: 18px; font-weight: 500; }
+.signin-help[open] summary::after { content: '−'; }
+.signin-help ol { display: grid; gap: 9px; margin: 0; padding: 5px 0 0 22px; color: var(--muted); font-size: 11px; }
+.signin-help li { padding-left: 3px; }
+.signin-help li::marker { color: var(--coral); font-weight: 800; }
+.account-heading { margin-top: 34px; }
+.account-item { transition: background .18s ease; }
+.account-item:hover { background: #ffffff80; }
+.account-item h2, .account-empty h2, .manage-card-top h2 { font-family: var(--font-display); font-weight: 600; }
+.account-subnav a.is-active::after { background: var(--coral); }
+.field input, .field textarea, .skill-row input { border-color: #ccd7cf; border-radius: 4px; }
+.field input:focus, .field textarea:focus, .skill-row input:focus { border-color: var(--forest); outline: 2px solid #20594e20; }
+.repeat-card { border-bottom-color: #cfdad2; }
+.add-row { color: var(--forest); }
+.template-card { border-radius: 6px; }
+.template-choice.is-selected .template-card, .template-choice > input:focus-visible + .template-card { border-color: var(--forest); box-shadow: 0 12px 28px #203b3016; }
+.manage-card { overflow: hidden; border: 1px solid var(--line); border-radius: 7px; box-shadow: 0 16px 42px #203b300b; }
+.manage-avatar { border-radius: 8px; color: var(--ink); background: var(--lime); font-family: var(--font-display); }
+.manage-link-row a { color: var(--forest); }
+.delete-zone { background: #fff8f5; }
+.preview-toolbar { max-width: 1200px; }
+.public-portfolio { border-radius: 7px; box-shadow: 0 18px 50px #203b3014; }
+
+@media (max-width: 800px) {
+    .hero-copy h1 { font-size: 54px; }
+    .page-heading h1 { font-size: 48px; }
+}
+
+@media (max-width: 600px) {
+    .hero-copy h1 { font-size: 43px; }
+    .page-heading h1, .editor-intro h1 { font-size: 40px; }
+    .auth-copy h1, .account-heading h1 { font-size: 38px; }
+    .auth-form { padding: 22px; }
+    .home-hero { padding-top: 42px; }
+}

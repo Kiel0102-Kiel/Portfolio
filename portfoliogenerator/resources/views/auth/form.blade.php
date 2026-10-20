@@ -8,6 +8,16 @@
             <p class="eyebrow">FOLIOFORM ACCOUNT</p>
             <h1>{{ $mode === 'register' ? 'Your work, all together.' : 'Welcome!' }}</h1>
             <p class="muted-copy">{{ $mode === 'register' ? 'Create an account to keep your portfolios together.' : 'Sign in to find and manage your portfolios.' }}</p>
+            @if ($mode === 'login')
+                <details class="signin-help">
+                    <summary>How it works</summary>
+                    <ol>
+                        <li>Create an account or sign in.</li>
+                        <li>Add your profile, experience, skills, and projects.</li>
+                        <li>Choose a design, preview your portfolio, then share its link.</li>
+                    </ol>
+                </details>
+            @endif
         </div>
 
         <form class="auth-form" method="POST" action="{{ $mode === 'register' ? route('register.store') : route('login.store') }}">

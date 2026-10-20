@@ -38,6 +38,8 @@ class PortfolioFlowTest extends TestCase
             ->assertDontSee('class="nav-account" href="'.route('login').'"', false)
             ->assertDontSee('nav-register')
             ->assertSee('Create an account')
+            ->assertSee('How it works')
+            ->assertSee('Choose a design, preview your portfolio, then share its link.')
             ->assertDontSee('footer-back');
 
         $this->post(route('register.store'), [
